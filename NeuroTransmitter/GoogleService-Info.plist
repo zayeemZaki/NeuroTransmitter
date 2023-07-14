@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>277454783750-0i03o6oa7gpk0kniquuvsm273k3ghn15.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.277454783750-0i03o6oa7gpk0kniquuvsm273k3ghn15</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDoVwr2c-F4nIyk75Oxi_cu-HHMxB3mFPw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>277454783750</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>kash.eur5.NeuroTransmitter</string>
+	<key>PROJECT_ID</key>
+	<string>neurotransmitter-b15e8</string>
+	<key>STORAGE_BUCKET</key>
+	<string>neurotransmitter-b15e8.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:277454783750:ios:305e0f371a5d47fe9aca87</string>
+</dict>
+</plist>
