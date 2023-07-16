@@ -20,6 +20,8 @@
 		6E2A11072A47678F0034A8E0 /* CommentInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2A11062A47678F0034A8E0 /* CommentInputView.swift */; };
 		6E2A11092A4767DB0034A8E0 /* ReplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2A11082A4767DB0034A8E0 /* ReplyView.swift */; };
 		6E2A11102A476AB70034A8E0 /* ChatInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2A110F2A476AB70034A8E0 /* ChatInputView.swift */; };
+		6E4F44B52A649C96004D22D2 /* CreateHighlightAnnotations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4F44B42A649C96004D22D2 /* CreateHighlightAnnotations.swift */; };
+		6E4F44B72A64A2D8004D22D2 /* CreateOnDocumentAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4F44B62A64A2D8004D22D2 /* CreateOnDocumentAnnotation.swift */; };
 		6E7C08772A61A50B000F0EAC /* ChatDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7C08762A61A50B000F0EAC /* ChatDrawerView.swift */; };
 		6E7C08792A61A55B000F0EAC /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7C08782A61A55B000F0EAC /* SignInView.swift */; };
 		6E8512EB2A535246004162CA /* OnDocumentComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8512EA2A535246004162CA /* OnDocumentComment.swift */; };
@@ -50,6 +52,8 @@
 		6E2A11062A47678F0034A8E0 /* CommentInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputView.swift; sourceTree = "<group>"; };
 		6E2A11082A4767DB0034A8E0 /* ReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyView.swift; sourceTree = "<group>"; };
 		6E2A110F2A476AB70034A8E0 /* ChatInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputView.swift; sourceTree = "<group>"; };
+		6E4F44B42A649C96004D22D2 /* CreateHighlightAnnotations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHighlightAnnotations.swift; sourceTree = "<group>"; };
+		6E4F44B62A64A2D8004D22D2 /* CreateOnDocumentAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateOnDocumentAnnotation.swift; sourceTree = "<group>"; };
 		6E7C08762A61A50B000F0EAC /* ChatDrawerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDrawerView.swift; sourceTree = "<group>"; };
 		6E7C08782A61A55B000F0EAC /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		6E8512EA2A535246004162CA /* OnDocumentComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDocumentComment.swift; sourceTree = "<group>"; };
@@ -104,6 +108,7 @@
 		6E2A11052A4767560034A8E0 /* Comments */ = {
 			isa = PBXGroup;
 			children = (
+				6E4F44B32A649C2B004D22D2 /* FetchCommentMessages */,
 				6E97813A2A39713A00487F90 /* CommentDrawerView.swift */,
 				6E2A11062A47678F0034A8E0 /* CommentInputView.swift */,
 				6E2A11082A4767DB0034A8E0 /* ReplyView.swift */,
@@ -124,15 +129,64 @@
 			isa = PBXGroup;
 			children = (
 				6E9781382A39711A00487F90 /* DocumentView.swift */,
-				6E8512EA2A535246004162CA /* OnDocumentComment.swift */,
-				6E8512F02A53A2DE004162CA /* CommentAnnotation.swift */,
-				6E8512FA2A562656004162CA /* AnnotationToolbar.swift */,
-				6E8512EC2A53A004004162CA /* HighlightAnnotation.swift */,
-				6E8512F82A56259F004162CA /* PDFViewWrapper.swift */,
-				6E8512F32A5485BF004162CA /* DeleteAnnotation.swift */,
-				6E8512FC2A562A1F004162CA /* FetchCommentMessages.swift */,
+				6E4F44B02A649BD8004D22D2 /* Annotations */,
+				6E4F44AE2A649BB1004D22D2 /* PDFViewWrapper */,
+				6E4F44B22A649C15004D22D2 /* AnnotationToolbar */,
+				6E4F44B12A649BF8004D22D2 /* DeleteAnnotation */,
+				6E4F44B92A64B384004D22D2 /* CreateAnnotations */,
 			);
 			path = DocumentView;
+			sourceTree = "<group>";
+		};
+		6E4F44AE2A649BB1004D22D2 /* PDFViewWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				6E8512F82A56259F004162CA /* PDFViewWrapper.swift */,
+			);
+			path = PDFViewWrapper;
+			sourceTree = "<group>";
+		};
+		6E4F44B02A649BD8004D22D2 /* Annotations */ = {
+			isa = PBXGroup;
+			children = (
+				6E8512EA2A535246004162CA /* OnDocumentComment.swift */,
+				6E8512F02A53A2DE004162CA /* CommentAnnotation.swift */,
+				6E8512EC2A53A004004162CA /* HighlightAnnotation.swift */,
+			);
+			path = Annotations;
+			sourceTree = "<group>";
+		};
+		6E4F44B12A649BF8004D22D2 /* DeleteAnnotation */ = {
+			isa = PBXGroup;
+			children = (
+				6E8512F32A5485BF004162CA /* DeleteAnnotation.swift */,
+			);
+			path = DeleteAnnotation;
+			sourceTree = "<group>";
+		};
+		6E4F44B22A649C15004D22D2 /* AnnotationToolbar */ = {
+			isa = PBXGroup;
+			children = (
+				6E8512FA2A562656004162CA /* AnnotationToolbar.swift */,
+			);
+			path = AnnotationToolbar;
+			sourceTree = "<group>";
+		};
+		6E4F44B32A649C2B004D22D2 /* FetchCommentMessages */ = {
+			isa = PBXGroup;
+			children = (
+				6E8512FC2A562A1F004162CA /* FetchCommentMessages.swift */,
+			);
+			path = FetchCommentMessages;
+			sourceTree = "<group>";
+		};
+		6E4F44B92A64B384004D22D2 /* CreateAnnotations */ = {
+			isa = PBXGroup;
+			children = (
+				6E4F44B62A64A2D8004D22D2 /* CreateOnDocumentAnnotation.swift */,
+				6E4F44B42A649C96004D22D2 /* CreateHighlightAnnotations.swift */,
+			);
+			path = CreateAnnotations;
 			sourceTree = "<group>";
 		};
 		6E7C08702A619C8E000F0EAC /* SignInView */ = {
@@ -323,6 +377,7 @@
 				6E9781372A3970DB00487F90 /* SignUpPage.swift in Sources */,
 				6E97813B2A39713A00487F90 /* CommentDrawerView.swift in Sources */,
 				6E8512EB2A535246004162CA /* OnDocumentComment.swift in Sources */,
+				6E4F44B52A649C96004D22D2 /* CreateHighlightAnnotations.swift in Sources */,
 				6E8512FB2A562656004162CA /* AnnotationToolbar.swift in Sources */,
 				6E2A11092A4767DB0034A8E0 /* ReplyView.swift in Sources */,
 				6E8512ED2A53A004004162CA /* HighlightAnnotation.swift in Sources */,
@@ -333,6 +388,7 @@
 				6E9781392A39711A00487F90 /* DocumentView.swift in Sources */,
 				6E8512F92A56259F004162CA /* PDFViewWrapper.swift in Sources */,
 				6E95965E2A449E42007DA994 /* LoadingView.swift in Sources */,
+				6E4F44B72A64A2D8004D22D2 /* CreateOnDocumentAnnotation.swift in Sources */,
 				6E8512FD2A562A1F004162CA /* FetchCommentMessages.swift in Sources */,
 				6E7C08772A61A50B000F0EAC /* ChatDrawerView.swift in Sources */,
 				6E8512F42A5485BF004162CA /* DeleteAnnotation.swift in Sources */,

@@ -4,11 +4,13 @@
 //
 //  Created by Zayeem Zaki on 7/5/23.
 //
-/*
+
+
+
 import FirebaseAuth
 import FirebaseFirestore
 
-func fetchCommentMessages(documentURL: URL) {
+func fetchCommentMessages(documentURL: URL, completion: @escaping ([CommentMessage]) -> Void) {
     guard let currentUserEmail = Auth.auth().currentUser?.email else {
         print("User is not signed in.")
         return
@@ -116,9 +118,12 @@ func fetchCommentMessages(documentURL: URL) {
         
         dispatchGroup.notify(queue: .main) {
             // All asynchronous tasks have completed
-            self.commentMessages = fetchedCommentMessages // Assign the fetched comments to the main commentMessages array
+            completion(fetchedCommentMessages) // Call the completion handler with the fetched comments
         }
     }
-}*/
+}
+
+
+
 
 

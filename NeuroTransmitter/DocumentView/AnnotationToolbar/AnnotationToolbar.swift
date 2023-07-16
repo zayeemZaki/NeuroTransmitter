@@ -26,12 +26,12 @@ struct AnnotationToolbar: View {
     let colorButtonSize: CGFloat = 24 // Size of the color buttons
     @Environment(\.colorScheme) var colorScheme
     @Binding var isHighlighting: Bool
-
+    
     @State private var selectedOnDocumentAnnotation: CustomPDFAnnotation? // Store the selected annotation
     let documentURL: URL
     
     var body: some View {
-
+        
         ZStack {
             if !isTyping && !isAddingComment && !showDeleteButton && !isHighlighting{
                 HStack {
@@ -51,12 +51,12 @@ struct AnnotationToolbar: View {
                     }
                     .foregroundColor(.primary)
                     
-                        Button(action: {
-                            isHighlighting.toggle()
-                        }) {
-                            Image(systemName: "highlighter")
-                        }
-                        .foregroundColor(isHighlighting ? .blue : .black)
+                    Button(action: {
+                        isHighlighting.toggle()
+                    }) {
+                        Image(systemName: "highlighter")
+                    }
+                    .foregroundColor(isHighlighting ? .blue : .black)
                     
                 }
             }
@@ -89,6 +89,9 @@ struct AnnotationToolbar: View {
                     ColorButton(color: .red, isSelected: fontColor == .red, action: { fontColor = .red })
                     ColorButton(color: .green, isSelected: fontColor == .green, action: { fontColor = .green })
                     ColorButton(color: .blue, isSelected: fontColor == .blue, action: { fontColor = .blue })
+                    ColorButton(color: .black, isSelected: fontColor == .black, action: { fontColor = .black })
+                    ColorButton(color: .yellow, isSelected: fontColor == .yellow, action: { fontColor = .yellow })
+                    
                     
                     Menu {
                         ForEach(availableFontSizes, id: \.self) { size in
@@ -123,19 +126,39 @@ struct AnnotationToolbar: View {
                     Image(systemName: "highlighter")
                 }
                 .foregroundColor(isHighlighting ? .blue : .black)
-
+                
             }
             else if showDeleteButton {
-                        Button(action: {
-                            deleteAction() // Pass the required arguments
-                            
-                        }) {
-                            Image(systemName: "trash")
-                        }
-                        .foregroundColor(.red)
-                    }
+                Button(action: {
+                    deleteAction() // Pass the required arguments
+                    
+                }) {
+                    Image(systemName: "trash")
+                }
+                .foregroundColor(.red)
+            }
         }
-
+        
     }
 }
 
+struct ColorButton: View {
+    var color: Color
+    var isSelected: Bool
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                Circle()
+                    .fill(color)
+                    .frame(width: 6, height: 6)
+                
+                if isSelected {
+                    Image(systemName: "circle.fill")
+                        .foregroundColor(color)
+                }
+            }
+        }
+    }
+}

@@ -127,8 +127,8 @@ func fetchCommentAnnotations(documentURL: URL) {
         } else {
             print("PDFView is nil.")
         }
-
-
+        
+        
     }
     
 }
