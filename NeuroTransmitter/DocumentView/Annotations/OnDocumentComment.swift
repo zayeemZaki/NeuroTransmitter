@@ -17,17 +17,17 @@ func saveOnDocumentComment(_ annotation: CustomPDFAnnotation, documentURL: URL, 
         return
     }
     
-    /* guard let pdfView = PDFViewWrapper.pdfView,
+     guard let pdfView = PDFViewWrapper.pdfView,
      let currentPage = pdfView.currentPage,
      let pageIndex = pdfView.document?.index(for: currentPage) else {
      print("Failed to get current page or index.")
      return
-     }*/
+     }
     
-    let pdfView = PDFViewWrapper.pdfView
-    let currentPage = pdfView?.currentPage
-    let tapLocation = pdfView?.convert(location, to: currentPage!)
-    let pageIndex = PDFViewWrapper.getPageIndexForTouchedLocation(tapLocation!)
+//    let pdfView = PDFViewWrapper.pdfView
+//    let currentPage = pdfView?.currentPage
+//    let tapLocation = pdfView?.convert(location, to: currentPage!)
+//    let pageIndex = PDFViewWrapper.getPageIndexForTouchedLocation(tapLocation!)
     
     let db = Firestore.firestore()
     

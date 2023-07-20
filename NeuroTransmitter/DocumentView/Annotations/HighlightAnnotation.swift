@@ -17,10 +17,12 @@ func saveHighlightAnnotation(_ annotation: CustomPDFAnnotation, documentURL: URL
         return
     }
     
-    let pdfView = PDFViewWrapper.pdfView
-    let currentPage = pdfView?.currentPage
-    let tapLocation = pdfView?.convert(location, to: currentPage!)
-    let pageIndex = PDFViewWrapper.getPageIndexForTouchedLocation(tapLocation!)
+    guard let pdfView = PDFViewWrapper.pdfView,
+          let currentPage = pdfView.currentPage,
+          let pageIndex = pdfView.document?.index(for: currentPage) else {
+        print("Failed to get current page or index.")
+        return
+    }
     
     
     let db = Firestore.firestore()

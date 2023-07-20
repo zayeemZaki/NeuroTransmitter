@@ -27,7 +27,7 @@ struct ChatDrawerView: View {
                     }
                     HStack {
                         Text(message.content)
-                            .font(.body) // Set the desired text style for the content
+                           .font(.body) // Set the desired text style for the content
                             .padding(.leading, 5)
                     }
                 }
