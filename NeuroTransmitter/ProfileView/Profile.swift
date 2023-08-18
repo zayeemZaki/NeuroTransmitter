@@ -3,7 +3,6 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 //import SwiftFuzzy
-import Fuse
 
 struct Profile: View {
     // MARK: - State Properties
@@ -143,6 +142,7 @@ struct Profile: View {
     // Fetch user data from Firestore
     func fetchUserData() {
         guard let currentUserEmail = Auth.auth().currentUser?.email else {
+            print(userIsSignedOut)
             print("User is not signed in.")
             return
         }
@@ -289,10 +289,10 @@ struct Profile: View {
     }
 }
 
-struct Profile_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            Profile()
-        }
-    }
-}
+//struct Profile_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            Profile()
+//        }
+//    }
+//}

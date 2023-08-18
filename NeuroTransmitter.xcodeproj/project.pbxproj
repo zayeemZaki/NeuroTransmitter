@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E0413EC2A85B40200BD74C8 /* FolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0413EB2A85B40200BD74C8 /* FolderView.swift */; };
+		6E0413EE2A85B42600BD74C8 /* FetchFolders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0413ED2A85B42600BD74C8 /* FetchFolders.swift */; };
 		6E1CFAC42A4894EC00BE4ABE /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E1CFAC32A4894EB00BE4ABE /* WebKit.framework */; };
 		6E1CFAE52A4A369B00BE4ABE /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6E1CFAE42A4A369B00BE4ABE /* FirebaseAnalytics */; };
 		6E1CFAE72A4A369B00BE4ABE /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6E1CFAE62A4A369B00BE4ABE /* FirebaseAnalyticsSwift */; };
@@ -45,9 +47,13 @@
 		6E9781432A39731800487F90 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9781422A39731700487F90 /* UniformTypeIdentifiers.framework */; };
 		6E9781452A39733900487F90 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9781442A39733700487F90 /* PDFKit.framework */; };
 		6EA8453F2A66257E00EC1C03 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA8453E2A66257E00EC1C03 /* DocumentPicker.swift */; };
+		6EA845452A68C5BB00EC1C03 /* TextToSpeech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA845442A68C5BB00EC1C03 /* TextToSpeech.swift */; };
+		6EB075662A8837E0004F2BCB /* MoveDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB075652A8837E0004F2BCB /* MoveDocumentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E0413EB2A85B40200BD74C8 /* FolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderView.swift; sourceTree = "<group>"; };
+		6E0413ED2A85B42600BD74C8 /* FetchFolders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchFolders.swift; sourceTree = "<group>"; };
 		6E1CFAC32A4894EB00BE4ABE /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		6E2A11062A47678F0034A8E0 /* CommentInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputView.swift; sourceTree = "<group>"; };
 		6E2A11082A4767DB0034A8E0 /* ReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyView.swift; sourceTree = "<group>"; };
@@ -79,6 +85,8 @@
 		6E9781422A39731700487F90 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
 		6E9781442A39733700487F90 /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
 		6EA8453E2A66257E00EC1C03 /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
+		6EA845442A68C5BB00EC1C03 /* TextToSpeech.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextToSpeech.swift; sourceTree = "<group>"; };
+		6EB075652A8837E0004F2BCB /* MoveDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveDocumentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				6E8512FA2A562656004162CA /* AnnotationToolbar.swift */,
+				6EA845442A68C5BB00EC1C03 /* TextToSpeech.swift */,
 			);
 			path = AnnotationToolbar;
 			sourceTree = "<group>";
@@ -209,7 +218,10 @@
 			isa = PBXGroup;
 			children = (
 				6E97812B2A39702400487F90 /* HomePage.swift */,
+				6EB075652A8837E0004F2BCB /* MoveDocumentView.swift */,
 				6EA8453E2A66257E00EC1C03 /* DocumentPicker.swift */,
+				6E0413EB2A85B40200BD74C8 /* FolderView.swift */,
+				6E0413ED2A85B42600BD74C8 /* FetchFolders.swift */,
 			);
 			path = HomePage;
 			sourceTree = "<group>";
@@ -370,12 +382,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6EB075662A8837E0004F2BCB /* MoveDocumentView.swift in Sources */,
 				6E2A11102A476AB70034A8E0 /* ChatInputView.swift in Sources */,
 				6E97813F2A39720A00487F90 /* Profile.swift in Sources */,
+				6E0413EC2A85B40200BD74C8 /* FolderView.swift in Sources */,
 				6E97812C2A39702400487F90 /* HomePage.swift in Sources */,
 				6E9781372A3970DB00487F90 /* SignUpPage.swift in Sources */,
 				6E97813B2A39713A00487F90 /* CommentDrawerView.swift in Sources */,
 				6E8512EB2A535246004162CA /* OnDocumentComment.swift in Sources */,
+				6E0413EE2A85B42600BD74C8 /* FetchFolders.swift in Sources */,
 				6E4F44B52A649C96004D22D2 /* CreateHighlightAnnotations.swift in Sources */,
 				6E8512FB2A562656004162CA /* AnnotationToolbar.swift in Sources */,
 				6E2A11092A4767DB0034A8E0 /* ReplyView.swift in Sources */,
@@ -388,6 +403,7 @@
 				6E9781392A39711A00487F90 /* DocumentView.swift in Sources */,
 				6E8512F92A56259F004162CA /* PDFViewWrapper.swift in Sources */,
 				6E95965E2A449E42007DA994 /* LoadingView.swift in Sources */,
+				6EA845452A68C5BB00EC1C03 /* TextToSpeech.swift in Sources */,
 				6E4F44B72A64A2D8004D22D2 /* CreateOnDocumentAnnotation.swift in Sources */,
 				6E8512FD2A562A1F004162CA /* FetchCommentMessages.swift in Sources */,
 				6E7C08772A61A50B000F0EAC /* ChatDrawerView.swift in Sources */,
@@ -518,11 +534,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1;
 				DEVELOPMENT_ASSET_PATHS = "\"NeuroTransmitter/Preview Content\"";
 				DEVELOPMENT_TEAM = SM2W4QWU3A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "To let user login with face id";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -548,11 +565,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1;
 				DEVELOPMENT_ASSET_PATHS = "\"NeuroTransmitter/Preview Content\"";
 				DEVELOPMENT_TEAM = SM2W4QWU3A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "To let user login with face id";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -129,11 +129,7 @@ struct ChatMessage: Identifiable {
     let timestamp: Date
 }
 
-struct ChatThread: Identifiable {
-    let id = UUID()
-    let document: Document
-    var chatMessages: [ChatMessage]
-}
+
 
 
 
