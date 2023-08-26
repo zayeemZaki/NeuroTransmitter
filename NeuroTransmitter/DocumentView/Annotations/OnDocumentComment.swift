@@ -16,7 +16,11 @@ func saveOnDocumentComment(_ annotation: CustomPDFAnnotation, documentURL: URL, 
         print("User is not signed in.")
         return
     }
-    
+    guard let annotationID = annotation.annotationID else {
+        print("Annotation ID is missing.")
+        return
+    }
+
      guard let pdfView = PDFViewWrapper.pdfView,
      let currentPage = pdfView.currentPage,
      let pageIndex = pdfView.document?.index(for: currentPage) else {
@@ -32,11 +36,11 @@ func saveOnDocumentComment(_ annotation: CustomPDFAnnotation, documentURL: URL, 
     let db = Firestore.firestore()
     
     // Generate a unique ID for the free text annotation
-    let annotationID = UUID().uuidString
+//    let annotationID = UUID().uuidString
     
     // Create a document reference for the free text annotation in the desired collection
     let annotationRef = db.collection("onDocumentComments").document(documentURL.lastPathComponent).collection("annotations").document(annotationID)
-    
+    print(annotationID)
     // Set the annotation data to be saved in Firestore
     let annotationData: [String: Any] = [
         "documentURL": documentURL.absoluteString,
@@ -61,7 +65,8 @@ func saveOnDocumentComment(_ annotation: CustomPDFAnnotation, documentURL: URL, 
     annotationRef.setData(annotationData) { error in
         if let error = error {
             print("Error saving free text annotation: \(error.localizedDescription)")
-        } else {
+        } 
+        else {
             print("Free text annotation saved successfully")
         }
     }
@@ -145,7 +150,7 @@ func fetchOnDocumentComment(documentURL: URL) {
                     print("Invalid color string: \(fontColor)")
                     annotation.fontColor = .red
                 }
-                
+                 
                 if let currentPage = pdfView.document?.page(at: pageNumber ) {
                     annotation.contents = content
                     annotation.annotationID = annotationID // Store the annotation ID

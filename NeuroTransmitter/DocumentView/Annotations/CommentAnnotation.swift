@@ -56,7 +56,8 @@ func saveCommentAnnotation(_ annotation: PDFAnnotation, documentURL: URL) {
     commentAnnotationRef.addDocument(data: commentAnnotationData) { error in
         if let error = error {
             print("Error saving comment annotation: \(error.localizedDescription)")
-        } else {
+        }
+        else {
             print("Comment annotation saved successfully")
         }
     }

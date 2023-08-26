@@ -19,6 +19,7 @@ struct AnnotationToolbar: View {
     @Binding var showCommentDrawer: Bool
     @Binding var isTyping: Bool
     @Binding var fontColor: Color // Use Color instead of UIColor
+    @Binding var selectedColor: UIColor // Use Color instead of UIColor
     @Binding var showDeleteButton: Bool // Track whether to show the delete button
     @Binding var isBold: Bool // Track whether the text is bold
     @Binding var isItalic: Bool // Track whether the text is italic
@@ -29,7 +30,7 @@ struct AnnotationToolbar: View {
     let colorButtonSize: CGFloat = 24 // Size of the color buttons
     @Environment(\.colorScheme) var colorScheme
     @Binding var isHighlighting: Bool
-    
+    @Binding var lastSynthesisPosition: Int // Binding to hold the last synthesis position
     @State private var selectedOnDocumentAnnotation: CustomPDFAnnotation? // Store the selected annotation
     let documentURL: URL
     
@@ -139,13 +140,22 @@ struct AnnotationToolbar: View {
             }
             
             else if isHighlighting {
-                Button(action: {
-                    isHighlighting.toggle()
-                }) {
-                    Image(systemName: "highlighter")
+                HStack {
+                    
+                    ColorButton(color: .red, isSelected: selectedColor == .red, action: { selectedColor = .red })
+                    ColorButton(color: .green, isSelected: selectedColor == .green, action: { selectedColor = .green })
+                    ColorButton(color: .blue, isSelected: selectedColor == .blue, action: { selectedColor = .blue })
+                    ColorButton(color: .black, isSelected: selectedColor == .black, action: { selectedColor = .black })
+                    ColorButton(color: .yellow, isSelected: selectedColor == .yellow, action: { selectedColor = .yellow })
+                    
+                    Button(action: {
+                        isHighlighting.toggle()
+                    }) {
+                        Image(systemName: "highlighter")
+                    }
+                    .foregroundColor(isHighlighting ? .blue : .black)
+                    
                 }
-                .foregroundColor(isHighlighting ? .blue : .black)
-                
             }
             else if isReading {
                 HStack {
@@ -160,7 +170,7 @@ struct AnnotationToolbar: View {
                     .foregroundColor(.blue)
                     
                     Button(action: {
-                     //   speechSynthesizer.stopSpeaking(at: .immediate) // Stop the speech synthesis
+                        fastBackwardAndPlay()
                     }) {
                         Image(systemName: "gobackward.10")
                     }
@@ -208,7 +218,6 @@ struct AnnotationToolbar: View {
         
     }
     
-    @Binding var lastSynthesisPosition: Int // Binding to hold the last synthesis position
 
     func fastForwardAndPlay() {
         if let currentPage = PDFViewWrapper.pdfView?.currentPage,
@@ -243,18 +252,52 @@ struct AnnotationToolbar: View {
         }
     }
 
+    func fastBackwardAndPlay() {
+        if let currentPage = PDFViewWrapper.pdfView?.currentPage,
+           let text = currentPage.string {
+            
+            // Calculate the target position to skip back (e.g., 10 words)
+            let skipWords: Int = 10
+            
+            // Split the text into an array of words
+            let words = text.components(separatedBy: .whitespacesAndNewlines)
+            
+            // Calculate the new position in the text, ensuring it doesn't go below 0
+            let newPosition = max(lastSynthesisPosition - skipWords, 0)
+            
+            // Create a new utterance starting from the new position
+            let utteranceText = words[newPosition..<words.count].joined(separator: " ")
+            let utterance = AVSpeechUtterance(string: utteranceText)
+            utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // Set the appropriate voice if needed
+            
+            // Stop the current speech synthesis
+            speechSynthesizer.stopSpeaking(at: .immediate)
+            
+            // Speak the new utterance to start playing from the new position
+            speechSynthesizer.speak(utterance)
+            
+            // Update the lastSynthesisPosition
+            self.lastSynthesisPosition = newPosition
+
+            // Update the states to indicate that speech synthesis is now playing
+            isPlaying = true
+            isPaused = false
+        }
+    }
 
 
     func readCurrentPage() {
-        
         guard let currentPage = PDFViewWrapper.pdfView?.currentPage,
               let text = currentPage.string else {
             return
         }
         
-        let utterance = AVSpeechUtterance(string: text)
-        speechSynthesizer.speak(utterance)
+        DispatchQueue.main.async { // Ensure UI updates are performed on the main thread
+            let utterance = AVSpeechUtterance(string: text)
+            self.speechSynthesizer.speak(utterance)
+        }
     }
+
 
 }
 

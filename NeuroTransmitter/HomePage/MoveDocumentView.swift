@@ -1,41 +1,32 @@
-//
-//  MoveDocumentView.swift
-//  NeuroTransmitter
-//
-//  Created by Zayeem Zaki on 8/12/23.
-//
-
 import SwiftUI
 
 struct MoveDocumentView: View {
     @Binding var showMoveDocumentView: Bool
-    let selectedDocuments: Set<UUID>
+    let document: Document // Single document to move
     let availableFolders: [Folder]
     @Binding var selectedFolder: Folder?
     let moveAction: (Folder) -> Void
-    
     @Binding var selectedFolderIndex: Int 
     
     var body: some View {
         NavigationView {
             VStack {
                 Picker("Select Folder", selection: $selectedFolderIndex) {
-                    ForEach(availableFolders.indices) { index in
-                        Text(availableFolders[index].name).tag(index)
+                    ForEach(0..<availableFolders.count, id: \.self) { index in
+                        Text(self.availableFolders[index].name).tag(index)
                     }
                 }
                 .pickerStyle(.wheel)
                 .padding()
-                
                 Button("Move Documents") {
-                    if selectedFolderIndex >= 0 && selectedFolderIndex < availableFolders.count {
+                    if availableFolders.indices.contains(selectedFolderIndex) {
                         let selectedFolder = availableFolders[selectedFolderIndex]
-                        print("Button tapped - selected folder: \(selectedFolder)")
                         moveAction(selectedFolder)
                     } else {
-                        print("Selected folder is nil.")
+                        print("Selected folder index is out of range.")
+                        // Handle the error or adjust the index
+                        selectedFolderIndex = availableFolders.indices.first ?? -1
                     }
-                        //    showMoveDocumentView = false
                 }
                 .padding()
                 .background(Color.blue)
@@ -47,6 +38,14 @@ struct MoveDocumentView: View {
                 showMoveDocumentView = false
             })
         }
-    }
-}
+        .onAppear {
+            if !availableFolders.isEmpty {
+                selectedFolderIndex = 0
+            } else {
+                selectedFolderIndex = -1  // Set to -1 or any invalid index to indicate 'no selection'
+            }
+        }
 
+    }
+
+}
