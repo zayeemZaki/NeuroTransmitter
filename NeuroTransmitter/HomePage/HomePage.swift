@@ -50,33 +50,28 @@ struct HomePage: View {
     }
     
     var body: some View {
-        List {
-            ForEach(Array(filteredChatThreads.enumerated()), id: \.element.id) { (index, thread) in
-                HStack {
-                    // Checkbox to select/deselect document
-                    if isLongPressActive {
-                        if !selectedDocuments.isEmpty {
-                            Image(systemName: selectedDocuments.contains(thread.document.id) ? "checkmark.square.fill" : "square")
-                                .onTapGesture {
-                                    toggleSelection(thread.document.id)
-                                }
-                                .padding(.trailing, 8)
-                        }
-                    }
-                    
+        ZStack {
+            List {
+                ForEach(Array(filteredChatThreads.enumerated()), id: \.element.id) { (index, thread) in
                     NavigationLink(destination: DocumentView(documentURL: thread.document.url)) {
                         HStack {
-                            Text("\(index + 1).")
-                                .font(.headline)
-                                .padding(.horizontal, 10)
-                            Text(thread.document.name)
+                            HStack {
+                                Text("\(index + 1).")
+                                    .font(.headline)
+                                    .padding(.horizontal, 10)
+                                Text(thread.document.name)
+                                    .foregroundColor(selectedDocuments.contains(thread.document.id) ? Color.blue : Color(UIColor.label)) // Default text color
+                                
+                            }
+                            .contextMenu {
+                                Button(action: {
+                                    toggleSelection(thread.document.id)
+                                }) {
+                                    Label("Select", systemImage: selectedDocuments.contains(thread.document.id) ? "checkmark.circle.fill" : "circle")
+                                }
+                            }
                         }
-                    }
-                    .padding(10)
-                    .onLongPressGesture {
-                        toggleSelection(thread.document.id) // Toggle document selection
-                        longPressedDocument = thread.document // Set the long-pressed document
-                        isLongPressActive = true // Activate long-press state
+                        .padding(10)
                     }
                 }
             }
@@ -311,7 +306,311 @@ struct HomePage: View {
 
 
 
+/*
+ import SwiftUI
+ import MobileCoreServices
+ import FirebaseStorage
+ import UniformTypeIdentifiers
+ import FirebaseFirestore
 
+ struct Document: Identifiable { // Rename here
+     let id = UUID()
+     let name: String
+     let url: URL
+     var folderID: UUID
+ }
+
+ struct ChatThread: Identifiable {
+     let id = UUID()
+     var document: Document
+     var chatMessages: [ChatMessage]
+ }
+
+
+ struct HomePage: View {
+     
+     @State private var alert = false
+     @State private var chatThreads: [ChatThread] = []
+     @State private var documents: [Document] = []
+     @State private var errorMessage = ""
+     @State private var isLoading = true // New state to manage loading state
+     @State private var showDocumentPicker = false
+     @State private var searchText = ""
+     @State var didFetch = false
+     @Binding var selectedFolder: Folder?
+     @State private var showMoveDocumentView = false
+     @State private var selectedDocument: Document?
+     @State private var selectedMoveFolder: Folder?
+     @State private var folders: [Folder] = []
+     @State private var selectedThread: ChatThread?
+     @State private var selectedDocuments: Set<UUID> = []
+     @State private var longPressedDocument: Document?
+     @State private var isLongPressActive = false // New state for long-press
+
+     @State private var selectedFolderIndex: Int = 0 // Initialize with default selected index
+
+     var filteredChatThreads: [ChatThread] {
+         if searchText.isEmpty {
+             return chatThreads
+         }
+         else {
+             return chatThreads.filter { $0.document.name.localizedCaseInsensitiveContains(searchText) }
+         }
+     }
+     
+     var body: some View {
+         ZStack {
+             List {
+                 ForEach(Array(filteredChatThreads.enumerated()), id: \.element.id) { (index, thread) in
+                     NavigationLink(destination: DocumentView(documentURL: thread.document.url)) {
+                         HStack {
+                             HStack {
+                                 Text("\(index + 1).")
+                                     .font(.headline)
+                                     .padding(.horizontal, 10)
+                                 Text(thread.document.name)
+                                     .foregroundColor(selectedDocuments.contains(thread.document.id) ? Color.blue : Color(UIColor.label)) // Default text color
+                             }
+                             .contextMenu {
+                                 Button(action: {
+                                     toggleSelection(thread.document.id)
+                                 }) {
+                                     Label("Select", systemImage: selectedDocuments.contains(thread.document.id) ? "checkmark.circle.fill" : "circle")
+                                 }
+                             }
+                         }
+                         .padding(10)
+                     }
+                 }
+             }
+         }
+         .navigationBarTitle("")
+         .navigationViewStyle(StackNavigationViewStyle())
+         .toolbar {
+             ToolbarItemGroup(placement: .navigationBarLeading) {
+                 Text(selectedFolder?.name ?? "")
+                     .font(.headline)
+                     .bold()
+             }
+             ToolbarItemGroup(placement: .navigationBarTrailing) {
+                 Button(action: {
+                     showDocumentPicker.toggle()
+                 }) {
+                     Image(systemName: "plus")
+                 }
+                 .foregroundColor(Color(red: 0.2, green: 0.5, blue: 0.3))
+                 
+                 if !selectedDocuments.isEmpty {
+                     Button(action: {
+                         if selectedDocuments.count < filteredChatThreads.count {
+                             selectAll()
+                         }
+                         else {
+                             deselectAll()
+                         }
+                     }) {
+                         Image(systemName: selectedDocuments.count < filteredChatThreads.count ? "square.stack.fill" : "checkmark.square.fill")
+                     }
+                     .foregroundColor(Color(red: 0.2, green: 0.5, blue: 0.3))
+                     .disabled(filteredChatThreads.isEmpty)
+
+                     
+                     Button(action: {
+                         if !selectedDocuments.isEmpty {
+                             showMoveDocumentView.toggle()
+                         }
+                     }) {
+                         Image(systemName: "arrow.right.circle")
+                     }
+                     .foregroundColor(Color(red: 0.2, green: 0.5, blue: 0.3))
+                     .disabled(selectedDocuments.isEmpty)
+                     
+                 }
+             }
+         }
+         .onAppear {
+             fetchDocuments()
+             fetchFolders { fetchedFolders in
+                 self.folders = fetchedFolders // Populate the folders array
+             }
+
+         }
+         .sheet(isPresented: $showDocumentPicker) {
+             DocumentPicker(
+                 alert: self.$alert,
+                 documents: self.$documents,
+                 completionHandler: { document, errorMessage in
+                     if let errorMessage = errorMessage {
+                         self.errorMessage = errorMessage
+                     }
+                     else {
+                         // Handle successful document upload if needed
+
+                         let newThread = ChatThread(document: document, chatMessages: [])
+                         self.chatThreads.append(newThread)
+                         self.chatThreads.sort { $0.document.name.localizedCaseInsensitiveCompare($1.document.name) == .orderedAscending }
+                     }
+                 }, selectedFolder: self.$selectedFolder
+             )
+         }
+         .alert(isPresented: $alert) {
+             if !errorMessage.isEmpty {
+                 return Alert(
+                     title: Text("Error"),
+                     message: Text(errorMessage),
+                     dismissButton: .default(Text("Ok")) {
+                         errorMessage = ""
+                     }
+                 )
+             } else {
+                 return Alert(
+                     title: Text("Message"),
+                     message: Text("Uploaded Successfully"),
+                     dismissButton: .default(Text("Ok"))
+                 )
+             }
+         }
+         .sheet(isPresented: $showMoveDocumentView, onDismiss: {
+             selectedMoveFolder = nil
+         }) {
+             MoveDocumentView(
+                 showMoveDocumentView: $showMoveDocumentView,
+                 selectedDocuments: selectedDocuments,
+                 availableFolders: folders,
+                 selectedFolder: $selectedMoveFolder,
+                 moveAction: { folder in
+                     moveSelectedDocuments(folder: folder)
+                     showMoveDocumentView = false // Close the sheet after moving documents
+                 },
+                 selectedFolderIndex: $selectedFolderIndex
+             )
+             .id(UUID()) // Force view refresh
+             .onDisappear {
+                 isLongPressActive = false // Reset long-press state when sheet is dismissed
+             }
+         }
+         .searchable(text: $searchText, prompt: "Search documents")
+
+     }
+     
+     // Function to toggle document selection
+     func toggleSelection(_ documentID: UUID) {
+         if selectedDocuments.contains(documentID) {
+             selectedDocuments.remove(documentID)
+         } else {
+             selectedDocuments.insert(documentID)
+         }
+     }
+     
+     // Function to select all documents
+     func selectAll() {
+         selectedDocuments = Set(filteredChatThreads.map { $0.document.id })
+     }
+     
+     // Function to deselect all documents
+     func deselectAll() {
+         selectedDocuments.removeAll()
+     }
+
+     
+     func fetchDocuments() {
+         if !didFetch {
+             
+             let db = Firestore.firestore()
+             db.collection("ResearchPapers").getDocuments { (querySnapshot, error) in
+                 if let error = error {
+                     print("Error getting documents: \(error.localizedDescription)")
+                     return
+                 }
+                 
+                 guard let documents = querySnapshot?.documents else {
+                     print("No documents found")
+                     return
+                 }
+                 
+                 let fetchedDocuments = documents.compactMap { document -> Document? in
+                     let data = document.data()
+                     guard let name = data["name"] as? String,
+                           let urlString = data["url"] as? String,
+                           let url = URL(string: urlString),
+                           let ID = data["folderID"] as? String,
+                           let folderID = UUID(uuidString: ID)
+                     else {
+                         return nil
+                     }
+                     return Document(name: name, url: url, folderID: folderID)
+                 }
+                 
+                 
+                 updateChatThreads(with: fetchedDocuments)
+             }
+             didFetch = true
+         }
+     }
+     
+     func updateChatThreads(with documents: [Document]) {
+         var updatedThreads: [ChatThread] = chatThreads
+
+         for document in documents {
+             if document.folderID == selectedFolder?.id {
+                 if let existingThreadIndex = updatedThreads.firstIndex(where: { $0.document.id == document.id }) {
+                     // Update the existing thread
+                     updatedThreads[existingThreadIndex].document = document
+                 }
+                 else {
+                     // Create a new thread only if it doesn't already exist
+                     let newThread = ChatThread(document: document, chatMessages: [])
+                     updatedThreads.append(newThread)
+                 }
+             }
+         }
+
+         // Sort the updatedThreads array based on the name of the documents
+         updatedThreads.sort { $0.document.name.localizedCaseInsensitiveCompare($1.document.name) == .orderedAscending }
+
+         chatThreads = updatedThreads
+     }
+     
+     func moveSelectedDocuments(folder: Folder) {
+         let db = Firestore.firestore()
+
+         for threadIndex in chatThreads.indices {
+             if selectedDocuments.contains(chatThreads[threadIndex].document.id) {
+                 let documentName = chatThreads[threadIndex].document.name
+
+                 // Query Firestore by document name
+                 db.collection("ResearchPapers").whereField("name", isEqualTo: documentName).getDocuments { (snapshot, error) in
+                     if let error = error {
+                         print("Error querying documents: \(error.localizedDescription)")
+                         return
+                     }
+
+                     guard let document = snapshot?.documents.first else {
+                         print("Document not found")
+                         return
+                     }
+
+                     // Update the folderID of the retrieved document
+                     document.reference.updateData([
+                         "folderID": folder.id.uuidString
+                     ]) { error in
+                         if let error = error {
+                             print("Error updating folderID in Firestore: \(error)")
+                         }
+                         else {
+                             // Successfully moved documents, update selectedFolder
+                             selectedFolder = folder
+                         }
+                     }
+                 }
+             }
+         }
+
+         selectedDocuments.removeAll()
+     }
+
+ }
+ */
 
 
 

@@ -103,15 +103,19 @@ struct SignUpPage: View {
                                 .padding()
                         }
                         
-                        // Sign Up Button
-                        Button("Sign Up") {
-                            register()
+                        NavigationLink(destination: EmptyView(), isActive: .constant(false)) {
+                            Button(action: {
+                                register()
+                            }) {
+                                Text("Sign Up")
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: 350, minHeight: 50)
+                                    .background(Color(red: 0.2, green: 0.5, blue: 0.3))
+                                    .cornerRadius(10)
+                                    .padding()
+                            }
                         }
-                        .foregroundColor(.white)
-                        .frame(maxWidth: 350, minHeight: 50)
-                        .background(Color(red: 0.2, green: 0.5, blue: 0.3))
-                        .cornerRadius(10)
-                        .padding()
+
                     }
                     .padding(.vertical, 10)
                     .padding(.bottom, 100) // Adjust the padding based on your needs

@@ -103,14 +103,19 @@
                              .foregroundColor(colorScheme == .dark ? .white : .black)
                      }
                      
-                     Button("Login") {
-                         login()
+                     NavigationLink(destination: EmptyView(), isActive: .constant(false)) {
+                         Button(action: {
+                             login()
+                         }) {
+                             Text("Login")
+                                 .foregroundColor(.white)
+                                 .frame(maxWidth: .infinity, minHeight: 50)
+                                 .background(Color(red: 0.2, green: 0.5, blue: 0.3))
+                                 .cornerRadius(10)
+                                 .padding(.horizontal, 20)
+                         }
                      }
-                     .foregroundColor(.white)
-                     .frame(maxWidth: .infinity, minHeight: 50)
-                     .background(Color(red: 0.2, green: 0.5, blue: 0.3))
-                     .cornerRadius(10)
-                     .padding(.horizontal, 20)
+
                      
                      .toolbar {
                          ToolbarItem(placement: .bottomBar) {
