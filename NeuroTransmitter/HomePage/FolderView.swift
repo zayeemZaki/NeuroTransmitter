@@ -78,10 +78,8 @@ struct FolderListView: View {
         }
         .onAppear {
             fetchFolders { fetchedFolders in
-                // Assuming 'self.folders' is a @State variable in your current SwiftUI view
-                // Update your folders array with the fetched folders on the main thread
                 DispatchQueue.main.async {
-                    self.folders = fetchedFolders
+                    self.folders = fetchedFolders.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
                 }
             }
         }

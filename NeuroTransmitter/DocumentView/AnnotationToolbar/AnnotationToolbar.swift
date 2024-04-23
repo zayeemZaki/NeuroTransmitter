@@ -38,13 +38,14 @@ struct AnnotationToolbar: View {
     @State private var isPlaying: Bool = false
     @State private var isReading: Bool = false
     let speechSynthesizer = AVSpeechSynthesizer() // Create an instance of AVSpeechSynthesizer
-
+    
+    @Binding var isPopUp:Bool
 
     
     var body: some View {
         
         ZStack {
-            if !isTyping && !isAddingComment && !showDeleteButton && !isHighlighting && !isReading{
+            if !isTyping && !isAddingComment && !showDeleteButton && !isHighlighting && !isReading && !isPopUp{
                 HStack {
                     Button(action: {
                         readCurrentPage()
@@ -78,6 +79,13 @@ struct AnnotationToolbar: View {
                     }
                     .foregroundColor(.primary)
                     
+                    Button(action: {
+                        isPopUp.toggle()
+                    }) {
+                        Image(systemName: "doc.plaintext.fill")
+                    }
+                    .foregroundColor(.primary)
+                    
                 }
             }
             else if isAddingComment {
@@ -88,6 +96,14 @@ struct AnnotationToolbar: View {
                     Image(systemName: "rectangle.and.pencil.and.ellipsis")
                 }
                 .foregroundColor(.blue )
+            }
+            else if isPopUp {
+                Button(action: {
+                    isPopUp.toggle()
+                }) {
+                    Image(systemName: "doc.plaintext.fill")
+                }
+                .foregroundColor(.blue)
             }
             else if isTyping {
                 HStack(spacing: 0) {
@@ -214,6 +230,7 @@ struct AnnotationToolbar: View {
                 }
                 .foregroundColor(.red)
             }
+
         }
         
     }
