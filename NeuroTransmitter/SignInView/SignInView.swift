@@ -5,6 +5,7 @@ import FirebaseMessaging
 import FirebaseFirestore
 import PDFKit
 
+
 struct SignInView: View {
     @State private var email = ""
     @State private var isLoading = true
@@ -31,6 +32,9 @@ struct SignInView: View {
                     // The following frame modifier ensures the view can expand fully. It might be redundant
                     // depending on your NavigationView's configuration and the views it contains.
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .navigationBarBackButtonHidden(true) // Hide the back button
+                    .navigationBarItems(leading: EmptyView()) // Remove any leading items
+
                 } else {
                     signInContent
                 }
@@ -85,9 +89,21 @@ struct SignInView: View {
 
     var signInForm: some View {
         VStack {
+            
+            Text("Email Address")
+                .foregroundColor(colorScheme == .dark ? .white : .black) // Adjusts color based on the theme
+                .padding(.bottom, 5)
+                .fontWeight(.heavy)
+
             // Email Address
             TextField("Email Address", text: $email)
                 .textFieldStyle().foregroundColor(.black)
+
+            Text("Password")
+                .foregroundColor(colorScheme == .dark ? .white : .black) // Adjusts color based on the theme
+                .padding(.bottom, 5)
+                .padding(.top, 5)
+                .fontWeight(.heavy)
 
             // Password
             SecureFieldWithEyeIcon(

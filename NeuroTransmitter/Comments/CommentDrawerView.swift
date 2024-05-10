@@ -119,6 +119,10 @@ struct CommentDrawerView: View {
             }
             .onAppear {
                 selectedCommentIndex = nil
+                fetchCommentMessages(documentURL: documentURL) { fetchedCommentMessages in
+                    commentMessages = fetchedCommentMessages
+                }
+
             }
         }
         else if let selectedCommentIndex = selectedCommentIndex {

@@ -119,9 +119,6 @@ public struct DocumentView: View {
         .onAppear {
             fetchOnDocumentComment(documentURL: documentURL)
             fetchCommentAnnotations(documentURL: documentURL)
-            fetchCommentMessages(documentURL: documentURL) { fetchedCommentMessages in
-                commentMessages = fetchedCommentMessages
-            }
             fetchHighlightAnnotations(documentURL: documentURL)
             fetchPopUpAnnotations(documentURL: documentURL)
         }
