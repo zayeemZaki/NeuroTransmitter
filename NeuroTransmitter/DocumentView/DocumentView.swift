@@ -112,6 +112,7 @@ public struct DocumentView: View {
         .sheet(isPresented: $showPopUp) {
             PopUpView(popUpAnnotationContent: $popUpAnnotationContent, onClose: {
                 showPopUp = false
+                isPopUp = false
                 popUpAnnotationContent = "" // Clear the content for next use
             }, documentURL: documentURL, selectedPopUpAnnotation: $selectedPopUpAnnotation)
         }
