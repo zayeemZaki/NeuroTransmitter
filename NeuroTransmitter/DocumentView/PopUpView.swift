@@ -6,7 +6,8 @@ struct PopUpView: View {
     var onClose: () -> Void
     let documentURL: URL
     @Binding var selectedPopUpAnnotation: PopUpAnnotation?
-
+    @Binding var isPopUp: Bool
+    
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
             TextEditor(text: bindingForAnnotationContent())
@@ -30,7 +31,18 @@ struct PopUpView: View {
         .onAppear {
             fetchAnnotationContent()
         }
+        // Inside PopUpView
+        .onDisappear {
+            clearAnnotationContent()
+        }
+
     }
+    
+    private func clearAnnotationContent() {
+        self.popUpAnnotationContent = "" // Ensure content is cleared when view disappears
+        self.isPopUp = false // Also manage the popup visibility centrally if needed
+    }
+
 
     private func bindingForAnnotationContent() -> Binding<String> {
         Binding<String>(
@@ -41,6 +53,7 @@ struct PopUpView: View {
                     updateAnnotationContentInFirestore(newValue, documentURL: documentURL, annotationID: annotationID) { success in
                         if success {
                             print("Update successful")
+                            isPopUp = false
                         } else {
                             print("Failed to update annotation")
                         }

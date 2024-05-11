@@ -114,7 +114,7 @@ public struct DocumentView: View {
                 showPopUp = false
                 isPopUp = false
                 popUpAnnotationContent = "" // Clear the content for next use
-            }, documentURL: documentURL, selectedPopUpAnnotation: $selectedPopUpAnnotation)
+            }, documentURL: documentURL, selectedPopUpAnnotation: $selectedPopUpAnnotation, isPopUp: $isPopUp)
         }
         .onAppear {
             fetchOnDocumentComment(documentURL: documentURL)
@@ -152,18 +152,22 @@ public struct DocumentView: View {
             if let customAnnotation = tappedAnnotation as? CustomPDFAnnotation {
                 selectedOnDocumentAnnotation = customAnnotation
                 showDeleteButton = true
-            } else if let highlightAnnotation = tappedAnnotation as? HighlightPDFAnnotation {
+            } 
+            else if let highlightAnnotation = tappedAnnotation as? HighlightPDFAnnotation {
                 selectedHighlightAnnotation = highlightAnnotation
                 showDeleteButton = true
-            } else if let popUpAnnotation = tappedAnnotation as? PopUpAnnotation {
+            } 
+            else if let popUpAnnotation = tappedAnnotation as? PopUpAnnotation {
                 selectedPopUpAnnotation = popUpAnnotation
                 print(selectedPopUpAnnotation?.annotationID)
                 showPopUp = true
-            } else {
+            } 
+            else {
                 selectedAnnotation = tappedAnnotation
                 showCommentDrawer = true
             }
-        } else {
+        } 
+        else {
             showDeleteButton = false
             if isAddingComment {
                 let textAnnotation = PDFAnnotation(bounds: CGRect(x: tapLocation.x, y: tapLocation.y, width: 30, height: 30), forType: .freeText, withProperties: nil)
