@@ -181,7 +181,9 @@ struct HomePage: View {
         let annotationPaths = [
             "onDocumentComments/\(documentID)/annotations",
             "highlightAnnotations/\(documentID)/annotations",
-            "commentAnnotations/\(documentID)/annotations"
+            "commentAnnotations/\(documentID)/annotations",
+            "popUpAnnotations/\(documentID)/annotations"
+
         ]
         
         let chatMessagesPath = "messages/\(documentID)/chats"
