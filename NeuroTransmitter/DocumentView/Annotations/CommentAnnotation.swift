@@ -1,10 +1,3 @@
-//
-//  CommentAnnotation.swift
-//  NeuroTransmitter
-//
-//  Created by Zayeem Zaki on 7/3/23.
-//
-
 import Foundation
 import FirebaseAuth
 import PDFKit

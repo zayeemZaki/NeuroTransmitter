@@ -1,10 +1,3 @@
-//
-//  ReplyView.swift
-//  NeuroTransmitter
-//
-//  Created by Zayeem Zaki on 6/24/23.
-//
-
 import SwiftUI
 import PDFKit
 

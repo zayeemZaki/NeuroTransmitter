@@ -1,12 +1,3 @@
-//
-//  FetchCommentMessages.swift
-//  NeuroTransmitter
-//
-//  Created by Zayeem Zaki on 7/5/23.
-//
-
-
-
 import FirebaseAuth
 import FirebaseFirestore
 

@@ -8,19 +8,6 @@
 		<string>Notification Sending Task</string>
 		<string>Background Task Management</string>
 	</array>
-	<key>UIApplicationSceneManifest</key>
-	<dict>
-	<key>UIApplicationSupportsMultipleScenes</key>
-	<true/>
-	<key>UISceneConfigurations</key>
-	<dict>
-		<key>Default Configuration</key>
-		<dict>
-			<key>UISceneDelegateClassName</key>
-			<string>NeuroTransmitter.SceneDelegate</string>
-		</dict>
-	</dict>
-	</dict>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -51,6 +38,19 @@
 			</array>
 		</dict>
 	</array>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>Default Configuration</key>
+			<dict>
+				<key>UISceneDelegateClassName</key>
+				<string>NeuroTransmitter.SceneDelegate</string>
+			</dict>
+		</dict>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

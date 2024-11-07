@@ -1,10 +1,3 @@
-//
-//  OnDocumentComment.swift
-//  NeuroTransmitter
-//
-//  Created by Zayeem Zaki on 7/3/23.
-//
-
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
@@ -27,17 +20,9 @@ func saveOnDocumentComment(_ annotation: CustomPDFAnnotation, documentURL: URL, 
      print("Failed to get current page or index.")
      return
      }
-    
-//    let pdfView = PDFViewWrapper.pdfView
-//    let currentPage = pdfView?.currentPage
-//    let tapLocation = pdfView?.convert(location, to: currentPage!)
-//    let pageIndex = PDFViewWrapper.getPageIndexForTouchedLocation(tapLocation!)
-    
+        
     let db = Firestore.firestore()
-    
-    // Generate a unique ID for the free text annotation
-//    let annotationID = UUID().uuidString
-    
+        
     // Create a document reference for the free text annotation in the desired collection
     let annotationRef = db.collection("onDocumentComments").document(documentURL.lastPathComponent).collection("annotations").document(annotationID)
     print(annotationID)
