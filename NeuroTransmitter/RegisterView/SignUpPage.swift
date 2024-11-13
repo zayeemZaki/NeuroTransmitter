@@ -20,18 +20,41 @@ struct SignUpPage: View {
             errorMessage = "Passwords don't match"
             return
         }
-
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
-            if let error = error {
-                errorMessage = error.localizedDescription
-            } else {
-                // Registration successful
-                if let fcmToken = Messaging.messaging().fcmToken {
-                    saveUserData(withFCMToken: fcmToken, name: name)
+        
+        // Check if the user is already registered in Firestore
+        let userRef = Firestore.firestore().collection("users").document(email)
+        userRef.getDocument { document, error in
+            if let document = document, document.exists {
+                // Check if the user is approved
+                if let isApproved = document.data()?["isApproved"] as? Bool {
+                    if isApproved {
+                        errorMessage = "Account already exists and is approved. Please sign in."
+                    } else {
+                        errorMessage = "Account already exists but needs approval."
+                    }
+                } else {
+                    errorMessage = "Account data is incomplete. Please contact support."
                 }
-                
-                // Navigate to login page
-                navigateToLogin = true
+                return
+            }
+            
+            // If user is not in Firestore, proceed to create an account
+            Auth.auth().createUser(withEmail: email, password: password) { result, error in
+                if let error = error {
+                    if let errorCode = AuthErrorCode.Code(rawValue: error._code), errorCode == .emailAlreadyInUse {
+                        errorMessage = "Account already exists. Please sign in."
+                    } else {
+                        errorMessage = error.localizedDescription
+                    }
+                } else {
+                    // Successfully created an account, save the user data
+                    if let fcmToken = Messaging.messaging().fcmToken {
+                        saveUserData(withFCMToken: fcmToken, name: name)
+                    }
+                    
+                    // Navigate to login page
+                    navigateToLogin = true
+                }
             }
         }
     }
