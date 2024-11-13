@@ -29,12 +29,10 @@ struct SignUpPage: View {
                 if let isApproved = document.data()?["isApproved"] as? Bool {
                     if isApproved {
                         errorMessage = "Account already exists and is approved. Please sign in."
-                    } 
-                    else {
+                    } else {
                         errorMessage = "Account already exists but needs approval."
                     }
-                } 
-                else {
+                } else {
                     errorMessage = "Account data is incomplete. Please contact support."
                 }
                 return
@@ -45,23 +43,24 @@ struct SignUpPage: View {
                 if let error = error {
                     if let errorCode = AuthErrorCode.Code(rawValue: error._code), errorCode == .emailAlreadyInUse {
                         errorMessage = "Account already exists. Please sign in."
-                    } 
-                    else {
+                    } else {
                         errorMessage = error.localizedDescription
                     }
-                } 
-                else {
-                    // Successfully created an account, save the user data
+                } else {
+                    // Successfully created an account, save the user data with approval status
                     if let fcmToken = Messaging.messaging().fcmToken {
                         saveUserData(withFCMToken: fcmToken, name: name)
                     }
                     
-                    // Navigate to login page
+                    // Set success message and navigate to login page
+                    errorMessage = "Thank you for creating an account, please contact admin for approval before sign in."
+                    registrationSuccess = true // Set success state
                     navigateToLogin = true
                 }
             }
         }
     }
+
 
     var body: some View {
         NavigationView {
