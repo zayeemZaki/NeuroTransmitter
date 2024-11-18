@@ -12,8 +12,21 @@ struct Profile: View {
     @State private var isEditing = false
     @State private var userIsSignedOut = false
     @State private var errorMessage = ""
+    @State private var showDeleteConfirmation = false
     @Environment(\.presentationMode) var presentationMode
     
+    // Search functionality state variables
+    @State private var isSearching = false
+    @State private var searchName = ""
+    @State private var searchedProfile: UserProfile?
+
+    struct UserProfile {
+        let name: String
+        let rocketID: String
+        let phoneNumber: String
+        let email: String
+    }
+
     var body: some View {
         NavigationView {
             VStack {
@@ -62,12 +75,45 @@ struct Profile: View {
                     .foregroundColor(.blue)
                     .padding()
                     
-                    // Delete Account Button
                     Button("Delete Account") {
-                        deleteUserAccount()
+                        showDeleteConfirmation = true
                     }
                     .foregroundColor(.red)
                     .padding()
+                    .alert("Confirm Deletion", isPresented: $showDeleteConfirmation) {
+                        Button("Delete", role: .destructive) {
+                            deleteUserAccount()
+                        }
+                        Button("Cancel", role: .cancel) { }
+                    } message: {
+                        Text("Are you sure you want to delete your account? This action cannot be undone.")
+                    }
+                    
+                    // Search Section
+                    Section(header: Text("Search Profiles")) {
+                        HStack {
+                            TextField("Search by Name", text: $searchName)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                            Button(action: {
+                                searchProfiles()
+                            }) {
+                                Text("Search")
+                                    .foregroundColor(.green)
+                            }
+                        }
+                        if isSearching {
+                            if let profile = searchedProfile {
+                                VStack(alignment: .leading) {
+                                    Text("Name: \(profile.name)").bold()
+                                    Text("Rocket ID: \(profile.rocketID)")
+                                    Text("Phone Number: \(profile.phoneNumber)")
+                                    Text("Email ID: \(profile.email)")
+                                }
+                            } else {
+                                Text("No profile found.")
+                            }
+                        }
+                    }
                 }
                 .onAppear {
                     fetchUserData()
@@ -90,6 +136,42 @@ struct Profile: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
+    // MARK: - Save User Data
+    func saveUserData(name: String, rocketID: String, phoneNumber: String) {
+        guard let userEmail = Auth.auth().currentUser?.email else {
+            print("User is not signed in.")
+            return
+        }
+        
+        let userRef = Firestore.firestore().collection("users").document(userEmail)
+        
+        // Fetch the current values of isApproved and FCMToken
+        userRef.getDocument { document, error in
+            if let document = document, document.exists {
+                let currentData = document.data()
+                let isApproved = currentData?["isApproved"] as? Bool ?? false
+                let fcmToken = currentData?["FCMToken"] as? String ?? ""
+                
+                let updatedUserData: [String: Any] = [
+                    "Name": name,
+                    "RocketID": rocketID,
+                    "phoneNumber": phoneNumber,
+                    "isApproved": isApproved,
+                    "FCMToken": fcmToken
+                ]
+                
+                userRef.updateData(updatedUserData) { error in
+                    if let error = error {
+                        print("Error updating user data: \(error.localizedDescription)")
+                    } else {
+                        print("User data updated successfully")
+                    }
+                }
+            }
+        }
+    }
+
+
     // Edit Button
     private var editButton: some View {
         Button(action: {
@@ -129,42 +211,47 @@ struct Profile: View {
         }
     }
     
-    // MARK: - Save User Data
-    func saveUserData(name: String, rocketID: String, phoneNumber: String) {
-        guard let userEmail = Auth.auth().currentUser?.email else {
-            print("User is not signed in.")
+    // MARK: - Search Profiles
+    func searchProfiles() {
+        guard !searchName.isEmpty else {
+            isSearching = false
             return
         }
         
-        let userRef = Firestore.firestore().collection("users").document(userEmail)
-        
-        // Fetch the current values of isApproved and FCMToken
-        userRef.getDocument { document, error in
-            if let document = document, document.exists {
-                let currentData = document.data()
-                let isApproved = currentData?["isApproved"] as? Bool ?? false
-                let fcmToken = currentData?["FCMToken"] as? String ?? ""
+        let usersRef = Firestore.firestore().collection("users")
+        usersRef.whereField("Name", isGreaterThanOrEqualTo: searchName)
+            .whereField("Name", isLessThanOrEqualTo: searchName + "\u{f8ff}")
+            .getDocuments { querySnapshot, error in
+                if let error = error {
+                    print("Error searching profiles: \(error.localizedDescription)")
+                    return
+                }
                 
-                let updatedUserData: [String: Any] = [
-                    "Name": name,
-                    "RocketID": rocketID,
-                    "phoneNumber": phoneNumber,
-                    "isApproved": isApproved,
-                    "FCMToken": fcmToken
-                ]
+                guard let documents = querySnapshot?.documents, !documents.isEmpty else {
+                    self.searchedProfile = nil
+                    self.isSearching = true
+                    return
+                }
                 
-                userRef.updateData(updatedUserData) { error in
-                    if let error = error {
-                        print("Error updating user data: \(error.localizedDescription)")
-                    } else {
-                        print("User data updated successfully")
+                for document in documents {
+                    let data = document.data()
+                    let name = data["Name"] as? String ?? ""
+                    let rocketID = data["RocketID"] as? String ?? ""
+                    let phoneNumber = data["phoneNumber"] as? String ?? ""
+                    let email = document.documentID
+                    
+                    if name.lowercased().contains(searchName.lowercased()) {
+                        self.searchedProfile = UserProfile(name: name, rocketID: rocketID, phoneNumber: phoneNumber, email: email)
+                        break
                     }
                 }
+                
+                if self.searchedProfile == nil {
+                    self.isSearching = true // No match found
+                }
             }
-        }
     }
     
-    // MARK: - Log Out
     func logOut() {
         do {
             try Auth.auth().signOut()
@@ -173,39 +260,31 @@ struct Profile: View {
             print("Error signing out: \(error.localizedDescription)")
         }
     }
+
     
-    // MARK: - Delete User Account
     func deleteUserAccount() {
-        guard let currentUser = Auth.auth().currentUser, let currentUserEmail = currentUser.email else {
-            print("No authenticated user found.")
-            return
-        }
+        guard let currentUser = Auth.auth().currentUser else { return }
         
-        let userRef = Firestore.firestore().collection("users").document(currentUserEmail)
+        let userEmail = currentUser.email ?? ""
+        let userRef = Firestore.firestore().collection("users").document(userEmail)
         
-        // Step 1: Delete the Firestore document
         userRef.delete { error in
             if let error = error {
-                print("Error deleting Firestore document: \(error.localizedDescription)")
-                errorMessage = "Failed to delete account data."
+                print("Error deleting user data: \(error.localizedDescription)")
                 return
             }
             
-            print("User data deleted from Firestore.")
-            
-            // Step 2: Delete the Firebase Authentication account
             currentUser.delete { error in
                 if let error = error {
                     print("Error deleting Firebase account: \(error.localizedDescription)")
-                    errorMessage = "Failed to delete account."
                     return
                 }
                 
-                print("Firebase account deleted successfully.")
                 userIsSignedOut = true
             }
         }
     }
+
 }
 
 struct Profile_Previews: PreviewProvider {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		233CFEB62CD9CAAA00295C75 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 233CFEB52CD9CAAA00295C75 /* GoogleService-Info.plist */; };
+		2367B2022CE7DA3500E3F1C8 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2367B2012CE7DA3500E3F1C8 /* SessionManager.swift */; };
 		2388D7652B40F49C006B9055 /* SecureFieldWithEyeIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2388D7642B40F49C006B9055 /* SecureFieldWithEyeIcon.swift */; };
 		23C5A34A2B349F8B00D933FC /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C5A3492B349F8B00D933FC /* ViewModel.swift */; };
 		23D50B0D2BEDB8D100249068 /* PopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D50B0C2BEDB8D100249068 /* PopUpView.swift */; };
@@ -55,7 +56,9 @@
 
 /* Begin PBXFileReference section */
 		233CFEB52CD9CAAA00295C75 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		2367B2012CE7DA3500E3F1C8 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		2388D7642B40F49C006B9055 /* SecureFieldWithEyeIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureFieldWithEyeIcon.swift; sourceTree = "<group>"; };
+		23AFFE942CEAD19A006FC1E1 /* ReadME.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ReadME.md; sourceTree = "<group>"; };
 		23C5A3492B349F8B00D933FC /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		23D50B0C2BEDB8D100249068 /* PopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpView.swift; sourceTree = "<group>"; };
 		23E008912B1281A4006D1F5D /* SaveUserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveUserData.swift; sourceTree = "<group>"; };
@@ -199,6 +202,7 @@
 			children = (
 				6E7C08782A61A55B000F0EAC /* SignInView.swift */,
 				2388D7642B40F49C006B9055 /* SecureFieldWithEyeIcon.swift */,
+				2367B2012CE7DA3500E3F1C8 /* SessionManager.swift */,
 			);
 			path = SignInView;
 			sourceTree = "<group>";
@@ -243,6 +247,7 @@
 		6E9781062A39673300487F90 = {
 			isa = PBXGroup;
 			children = (
+				23AFFE942CEAD19A006FC1E1 /* ReadME.md */,
 				233CFEB52CD9CAAA00295C75 /* GoogleService-Info.plist */,
 				6E9781112A39673300487F90 /* NeuroTransmitter */,
 				6E9781102A39673300487F90 /* Products */,
@@ -390,6 +395,7 @@
 				6E97813F2A39720A00487F90 /* Profile.swift in Sources */,
 				6E0413EC2A85B40200BD74C8 /* FolderView.swift in Sources */,
 				6E97812C2A39702400487F90 /* HomePage.swift in Sources */,
+				2367B2022CE7DA3500E3F1C8 /* SessionManager.swift in Sources */,
 				6E9781372A3970DB00487F90 /* SignUpPage.swift in Sources */,
 				23C5A34A2B349F8B00D933FC /* ViewModel.swift in Sources */,
 				6E97813B2A39713A00487F90 /* CommentDrawerView.swift in Sources */,
@@ -538,7 +544,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NeuroTransmitter/NeuroTransmitter.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"NeuroTransmitter/Preview Content\"";
 				DEVELOPMENT_TEAM = SM2W4QWU3A;
 				ENABLE_PREVIEWS = YES;
@@ -574,7 +580,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NeuroTransmitter/NeuroTransmitter.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"NeuroTransmitter/Preview Content\"";
 				DEVELOPMENT_TEAM = SM2W4QWU3A;
 				ENABLE_PREVIEWS = YES;

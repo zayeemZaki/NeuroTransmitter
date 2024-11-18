@@ -4,7 +4,7 @@ import LocalAuthentication
 import FirebaseMessaging
 import FirebaseFirestore
 import PDFKit
-
+import FirebaseAuth
 
 struct SignInView: View {
     @State private var email = ""
@@ -15,32 +15,34 @@ struct SignInView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var errorMessage = ""
     var successMessage: String? = nil
+//    @State private var userIsAuthenticated = false
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         Group {
             if isLoading {
                 LoadingView()
                     .onAppear(perform: performInitialLoading)
-            } else {
+            } 
+            else {
                 if userIsLoggedIn {
                     NavigationView {
                         FolderListView()
-                            .navigationBarTitle("", displayMode: .inline) // Optionally hide the navigation bar title
-                            .navigationBarHidden(true) // Hide the navigation bar to use the full screen for content
+                            .navigationBarHidden(true)
+                            .navigationViewStyle(StackNavigationViewStyle())
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .navigationBarBackButtonHidden(true)
+                            .navigationBarItems(leading: EmptyView())
                     }
-                    .navigationViewStyle(StackNavigationViewStyle()) // Use stack style to ensure full-screen presentation on iPad
-                    // The following frame modifier ensures the view can expand fully. It might be redundant
-                    // depending on your NavigationView's configuration and the views it contains.
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationBarBackButtonHidden(true) // Hide the back button
-                    .navigationBarItems(leading: EmptyView()) // Remove any leading items
-
-                } else {
+                } 
+                else {
                     signInContent
                 }
             }
         }
         .edgesIgnoringSafeArea(.all) // Ensure the content extends into the safe area, such as under the notch or the screen corners.
+        .onAppear(perform: setupAuthListener)
+
     }
 
 
@@ -152,7 +154,55 @@ struct SignInView: View {
             }
         }
     }
+    
+    private func setupAuthListener() {
+        Auth.auth().addStateDidChangeListener { _, user in
+            if let user = user {
+                // Check if the user is approved before setting them as logged in
+                checkApprovalStatus(for: user)
+            } else {
+                userIsLoggedIn = false
+                presentationMode.wrappedValue.dismiss()
+            }
+        }
+    }
 
+    private func checkApprovalStatus(for user: User) {
+        let userRef = Firestore.firestore().collection("users").document(user.email ?? "")
+        userRef.getDocument { document, error in
+            if let document = document, document.exists {
+                let userData = document.data()
+                if let isApproved = userData?["isApproved"] as? Bool, isApproved {
+                    DispatchQueue.main.async {
+                        // Clear error message when user is approved
+                        errorMessage = ""
+                        userIsLoggedIn = true
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        errorMessage = "Your account is pending approval."
+                        signOutUser()
+                    }
+                }
+            } else {
+                errorMessage = "Account not found. Please register."
+                signOutUser()
+            }
+        }
+    }
+
+
+    // Sign out the user if they are not approved
+    private func signOutUser() {
+        do {
+            try Auth.auth().signOut()
+            userIsLoggedIn = false
+        } catch {
+            print("Error signing out: \(error.localizedDescription)")
+        }
+    }
+
+    
     // Helper Functions
     func performInitialLoading() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -172,14 +222,18 @@ struct SignInView: View {
     }
 
     func login() {
-        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+        Auth.auth().signIn(withEmail: email, password: password) { _, error in
             if let error = error {
                 errorMessage = error.localizedDescription
-            } else {
-                checkApprovalStatusForFaceID()
+            } else if let user = Auth.auth().currentUser {
+                // Clear error message on successful login
+                errorMessage = ""
+                checkApprovalStatus(for: user)
             }
         }
     }
+
+
     
 
      // Check user's approval status
@@ -208,34 +262,31 @@ struct SignInView: View {
          }
      }
 
-     func authenticateWithFaceID() {
-         let context = LAContext()
-         var error: NSError?
-         
-         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Authenticate to access the app", reply: { success, error in
-                 if success {
-                     // User authentication with Face ID succeeded
-                     DispatchQueue.main.async {
-                         if rememberLogin {
-                             UserDefaults.standard.set(true, forKey: "isLoggedIn")
-                         }
-                         
-                         // Check user's approval status before allowing access
-                         checkApprovalStatusForFaceID()
-                     }
-                 }
-                 else {
-                     // Handle authentication failure or cancellation
-                     print("Authentication failed: \(error?.localizedDescription ?? "Unknown error")")
-                 }
-             })
-         }
-         else {
-             // Device doesn't support Face ID or there was an error
-             print("Face ID not available: \(error?.localizedDescription ?? "Unknown error")")
-         }
-     }
+    func authenticateWithFaceID() {
+        let context = LAContext()
+        var error: NSError?
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Authenticate to access the app") { success, error in
+                if success {
+                    DispatchQueue.main.async {
+                        // Clear error message on successful Face ID authentication
+                        errorMessage = ""
+                        
+                        if rememberLogin {
+                            UserDefaults.standard.set(true, forKey: "isLoggedIn")
+                        }
+                        checkApprovalStatusForFaceID()
+                    }
+                } else {
+                    print("Authentication failed: \(error?.localizedDescription ?? "Unknown error")")
+                }
+            }
+        } else {
+            print("Face ID not available: \(error?.localizedDescription ?? "Unknown error")")
+        }
+    }
+
  }
 
 extension View {
