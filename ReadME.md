@@ -44,7 +44,7 @@ To run this project locally:
 
 1.  **Clone the repository**
     ```bash
-    git clone [https://github.com/zayeemZaki/NeuroTransmitter.gir](https://github.com/zayeemZaki/NeuroTransmitter)
+    git clone https://github.com/zayeemZaki/NeuroTransmitter
     ```
 
 2.  **Open in Xcode**
