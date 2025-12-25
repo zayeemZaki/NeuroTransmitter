@@ -1,7 +1,5 @@
 # Neuro-Transmitter
 
-[**View on the iOS App Store**](https://apps.apple.com/us/app/neuro-transmitter/id6463495879)
-
 Neuro-Transmitter is a native iOS application designed to provide secure, gated access to specialized resources. Built with SwiftUI and Firebase, the platform enforces a strict identity management protocol where user access requires explicit administrator verification, ensuring sensitive information remains protected.
 
 ## Project Overview
